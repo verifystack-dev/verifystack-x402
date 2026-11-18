@@ -1,0 +1,31 @@
+{
+  "name": "@verifystack/x402-mcp",
+  "version": "0.1.0",
+  "description": "MCP connector and x402 client examples for VerifyStack Crypto & Intelligence Oracle (live perp funding arbitrage, pre-trade token safety, and EVM/Solana signature verification)",
+  "type": "module",
+  "bin": {
+    "verifystack-mcp": "./bin/verifystack-mcp.mjs"
+  },
+  "scripts": {
+    "start": "node ./bin/verifystack-mcp.mjs",
+    "test": "node --test ./test/mcp.test.mjs"
+  },
+  "keywords": [
+    "x402",
+    "mcp",
+    "ai-agents",
+    "base",
+    "usdc",
+    "funding-rate",
+    "arbitrage",
+    "token-security",
+    "erc1271",
+    "ed25519"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@x402/core": "^2.31.0",
+    "@x402/evm": "^2.31.0",
+    "viem": "^2.48.0"
+  }
+}
