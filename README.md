@@ -18,7 +18,8 @@ No API keys. No subscriptions. Agents pay per request using standard `PAYMENT-RE
 | Method | Endpoint | Price (USDC) | Description |
 | :--- | :--- | :--- | :--- |
 | `GET` | `/api/live-funding-arb` | **$0.01** | Live cross-exchange perp funding arbitrage across **Hyperliquid, dYdX v4, and Gate.io** normalized to hourly spreads & gross APR (20s cache). Query: `?symbol=BTC&limit=15&minApr=10` |
-| `POST` | `/api/token-safety` | **$0.015** | Pre-trade token security & liquidity risk audit combining **GoPlus Security**, **Honeypot.is**, and **DexScreener** (`base`, `ethereum`, `arbitrum`, `bsc`, `polygon`, `solana`). |
+| `POST` | `/api/clean-url` | **$0.005** | Web-to-LLM Markdown & metadata extractor: strips ads, scripts, and navigation boilerplate, returning compact Markdown + token estimate (60s cache). |
+| `POST` | `/api/token-safety` | **$0.008** | Pre-trade token security & liquidity risk audit combining **GoPlus Security**, **Honeypot.is**, and **DexScreener** (`base`, `ethereum`, `arbitrum`, `bsc`, `polygon`, `solana`). |
 | `POST` | `/api/verify-signature` | **$0.005** | Deterministic signature verifier for `evm_personal` (EIP-191), `evm_eip712`, `evm_erc1271` (live on-chain Smart Wallet RPC), and `ed25519` (Solana Base58/Hex/Base64). |
 | `POST` | `/api/arb-net-profit` | **$0.005** | Exact arbitrage net profit, break-even spread, and APR after fees, slippage, transfer gas, and funding. |
 | `POST` | `/api/liquidation-sim` | **$0.005** | Isolated-margin liquidation price, distance-to-liquidation %, risk/reward, and half-Kelly collateral sizing. |
@@ -79,28 +80,28 @@ No API keys. No subscriptions. Agents pay per request using standard `PAYMENT-RE
 
 ## Use via MCP (Claude Desktop, Cursor, AI Agents)
 
-Clone and install dependencies:
-
-```bash
-git clone https://github.com/verifystack-dev/verifystack-x402.git
-cd verifystack-x402
-npm install
-```
-
-Add to your `mcpServers` config (funded with USDC on Base `eip155:8453`, no ETH gas required):
+Zero-install via `npx` (once published on npm) or from a local clone:
 
 ```json
 {
   "mcpServers": {
     "verifystack-x402": {
-      "command": "node",
-      "args": ["/absolute/path/to/verifystack-x402/bin/verifystack-mcp.mjs"],
+      "command": "npx",
+      "args": ["-y", "verifystack-x402-mcp"],
       "env": {
         "X402_BUYER_KEY": "0xYOUR_BASE_BUYER_PRIVATE_KEY"
       }
     }
   }
 }
+```
+
+Or clone and run locally:
+
+```bash
+git clone https://github.com/verifystack-dev/verifystack-x402.git
+cd verifystack-x402
+npm install
 ```
 
 ---

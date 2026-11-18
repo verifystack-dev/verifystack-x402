@@ -17,7 +17,7 @@ describe("VerifyStack x402 MCP Server", () => {
       id: 2,
       method: "tools/list",
     });
-    assert.equal(listRes.result.tools.length, 5);
+    assert.equal(listRes.result.tools.length, 6);
     assert.deepEqual(
       listRes.result.tools.map((t) => t.name),
       TOOLS.map((t) => t.name)

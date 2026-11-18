@@ -28,9 +28,32 @@ export const TOOLS = [
     },
   },
   {
+    name: "verifystack_clean_url",
+    description:
+      "Paid x402 API ($0.005 USDC on Base): Fetches any public URL, strips ads/scripts/navigation boilerplate, and returns clean LLM-ready Markdown, metadata, and token-count estimation.",
+    inputSchema: {
+      type: "object",
+      required: ["url"],
+      properties: {
+        url: {
+          type: "string",
+          description: "Public http:// or https:// URL to fetch and clean",
+        },
+        maxChars: {
+          type: "number",
+          description: "Maximum output length in characters (200-40000, default 12000)",
+        },
+        includeLinks: {
+          type: "boolean",
+          description: "Include extracted page links array (default false)",
+        },
+      },
+    },
+  },
+  {
     name: "verifystack_token_safety",
     description:
-      "Paid x402 API ($0.015 USDC on Base): Pre-trade token security and DEX liquidity risk audit aggregating GoPlus Security, Honeypot.is simulation, and DexScreener liquidity.",
+      "Paid x402 API ($0.008 USDC on Base): Pre-trade token security and DEX liquidity risk audit aggregating GoPlus Security, Honeypot.is simulation, and DexScreener liquidity.",
     inputSchema: {
       type: "object",
       required: ["chain", "address"],
@@ -153,6 +176,7 @@ function buildRequestSpec(toolName, args = {}, baseUrl = DEFAULT_BASE_URL) {
   }
 
   const postRoutes = {
+    verifystack_clean_url: "/api/clean-url",
     verifystack_token_safety: "/api/token-safety",
     verifystack_verify_signature: "/api/verify-signature",
     verifystack_arb_net_profit: "/api/arb-net-profit",

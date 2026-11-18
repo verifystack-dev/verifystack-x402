@@ -1,10 +1,27 @@
 {
-  "name": "@verifystack/x402-mcp",
+  "name": "verifystack-x402-mcp",
   "version": "0.1.0",
-  "description": "MCP connector and x402 client examples for VerifyStack Crypto & Intelligence Oracle (live perp funding arbitrage, pre-trade token safety, and EVM/Solana signature verification)",
+  "description": "MCP server and x402 client for VerifyStack Crypto, Web-to-Markdown, and Verification Oracle (Base USDC)",
   "type": "module",
   "bin": {
-    "verifystack-mcp": "./bin/verifystack-mcp.mjs"
+    "verifystack-mcp": "./bin/verifystack-mcp.mjs",
+    "verifystack-x402-mcp": "./bin/verifystack-mcp.mjs"
+  },
+  "files": [
+    "bin/",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/verifystack-dev/verifystack-x402.git"
+  },
+  "homepage": "https://x402-crypto-math-api.verifystack.workers.dev",
+  "bugs": {
+    "url": "https://github.com/verifystack-dev/verifystack-x402/issues"
   },
   "scripts": {
     "start": "node ./bin/verifystack-mcp.mjs",
@@ -13,7 +30,9 @@
   "keywords": [
     "x402",
     "mcp",
+    "model-context-protocol",
     "ai-agents",
+    "web-to-markdown",
     "base",
     "usdc",
     "funding-rate",
