@@ -1,7 +1,7 @@
 {
   "name": "verifystack-x402-mcp",
-  "version": "0.1.0",
-  "description": "MCP server and x402 client for VerifyStack Crypto, Web-to-Markdown, and Verification Oracle (Base USDC)",
+  "version": "0.1.2",
+  "description": "MCP server and x402 client for VerifyStack Crypto, Prediction Markets, Web-to-Markdown, and Verification Oracle (Base USDC)",
   "type": "module",
   "bin": {
     "verifystack-mcp": "bin/verifystack-mcp.mjs",
@@ -36,8 +36,13 @@
     "base",
     "usdc",
     "funding-rate",
+    "prediction-markets",
+    "polymarket",
+    "kalshi",
     "arbitrage",
     "token-security",
+    "wallet-profiler",
+    "gas-oracle",
     "erc1271",
     "ed25519"
   ],

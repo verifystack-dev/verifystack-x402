@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { handleRpcMessage, TOOLS } from "../bin/verifystack-mcp.mjs";
 
 describe("VerifyStack x402 MCP Server", () => {
-  it("handles initialize and lists all 5 x402 tools", async () => {
+  it("handles initialize and lists all 8 x402 tools", async () => {
     const initRes = await handleRpcMessage({
       jsonrpc: "2.0",
       id: 1,
@@ -17,7 +17,7 @@ describe("VerifyStack x402 MCP Server", () => {
       id: 2,
       method: "tools/list",
     });
-    assert.equal(listRes.result.tools.length, 6);
+    assert.equal(listRes.result.tools.length, 8);
     assert.deepEqual(
       listRes.result.tools.map((t) => t.name),
       TOOLS.map((t) => t.name)

@@ -28,6 +28,32 @@ export const TOOLS = [
     },
   },
   {
+    name: "verifystack_prediction_markets",
+    description:
+      "Paid x402 API ($0.008 USDC on Base): Live prediction market scanner aggregating Polymarket, Kalshi, and Manifold Markets with normalized YES/NO probabilities, spreads, and cross-venue arbitrage divergences.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        q: {
+          type: "string",
+          description: "Optional keyword search across market questions (e.g. bitcoin, fed, eth)",
+        },
+        platform: {
+          type: "string",
+          description: "Filter platforms: polymarket, kalshi, manifold, or all",
+        },
+        minLiquidity: {
+          type: "number",
+          description: "Minimum market liquidity threshold",
+        },
+        limit: {
+          type: "number",
+          description: "Max markets returned (1-100, default 20)",
+        },
+      },
+    },
+  },
+  {
     name: "verifystack_clean_url",
     description:
       "Paid x402 API ($0.005 USDC on Base): Fetches any public URL, strips ads/scripts/navigation boilerplate, and returns clean LLM-ready Markdown, metadata, and token-count estimation.",
@@ -46,6 +72,29 @@ export const TOOLS = [
         includeLinks: {
           type: "boolean",
           description: "Include extracted page links array (default false)",
+        },
+      },
+    },
+  },
+  {
+    name: "verifystack_wallet_profile",
+    description:
+      "Paid x402 API ($0.008 USDC on Base): Multichain EVM wallet counterparty & gas profiler across Base, Ethereum, Arbitrum, Optimism, and Polygon (native/USDC balances, EOA vs contract check, nonce activity, live gas fees).",
+    inputSchema: {
+      type: "object",
+      required: ["address"],
+      properties: {
+        address: {
+          type: "string",
+          description: "EVM 0x address to inspect across chains",
+        },
+        chains: {
+          type: "array",
+          items: {
+            type: "string",
+            enum: ["base", "ethereum", "arbitrum", "optimism", "polygon"],
+          },
+          description: "Optional list of chains (defaults to all 5)",
         },
       },
     },
@@ -174,9 +223,22 @@ function buildRequestSpec(toolName, args = {}, baseUrl = DEFAULT_BASE_URL) {
       init: { method: "GET" },
     };
   }
+  if (toolName === "verifystack_prediction_markets") {
+    const params = new URLSearchParams();
+    if (args.q) params.set("q", String(args.q));
+    if (args.platform) params.set("platform", String(args.platform));
+    if (args.minLiquidity !== undefined) params.set("minLiquidity", String(args.minLiquidity));
+    if (args.limit !== undefined) params.set("limit", String(args.limit));
+    const qs = params.toString();
+    return {
+      url: `${baseUrl}/api/prediction-markets${qs ? `?${qs}` : ""}`,
+      init: { method: "GET" },
+    };
+  }
 
   const postRoutes = {
     verifystack_clean_url: "/api/clean-url",
+    verifystack_wallet_profile: "/api/wallet-profile",
     verifystack_token_safety: "/api/token-safety",
     verifystack_verify_signature: "/api/verify-signature",
     verifystack_arb_net_profit: "/api/arb-net-profit",
@@ -278,7 +340,7 @@ export async function handleRpcMessage(msg, deps = {}) {
       result: {
         protocolVersion: "2024-11-05",
         capabilities: { tools: {} },
-        serverInfo: { name: "verifystack-x402-mcp", version: "0.1.0" },
+        serverInfo: { name: "verifystack-x402-mcp", version: "0.1.2" },
       },
     };
   }
