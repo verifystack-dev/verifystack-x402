@@ -4,8 +4,8 @@
   "description": "MCP server and x402 client for VerifyStack Crypto, Web-to-Markdown, and Verification Oracle (Base USDC)",
   "type": "module",
   "bin": {
-    "verifystack-mcp": "./bin/verifystack-mcp.mjs",
-    "verifystack-x402-mcp": "./bin/verifystack-mcp.mjs"
+    "verifystack-mcp": "bin/verifystack-mcp.mjs",
+    "verifystack-x402-mcp": "bin/verifystack-mcp.mjs"
   },
   "files": [
     "bin/",
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/verifystack-dev/verifystack-x402.git"
+    "url": "git+https://github.com/verifystack-dev/verifystack-x402.git"
   },
   "homepage": "https://x402-crypto-math-api.verifystack.workers.dev",
   "bugs": {
