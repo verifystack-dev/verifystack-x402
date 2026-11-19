@@ -54,6 +54,66 @@ export const TOOLS = [
     },
   },
   {
+    name: "verifystack_defi_yields",
+    description:
+      "Paid x402 API ($0.005 USDC on Base): Live DeFi yield & stablecoin APY scanner powered by DefiLlama; filters by chain, symbol, TVL, and separates organic Base APY from reward emissions.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        chain: {
+          type: "string",
+          description: "Comma-separated chain filter (e.g. Base, Arbitrum, Ethereum, Solana)",
+        },
+        symbol: {
+          type: "string",
+          description: "Asset symbol substring filter (e.g. USDC, ETH)",
+        },
+        project: {
+          type: "string",
+          description: "Protocol slug filter (e.g. aave-v3, morpho-v1)",
+        },
+        stablecoin: { type: "boolean", description: "Only stablecoin pools" },
+        singleAsset: { type: "boolean", description: "Only single-asset no-IL pools" },
+        minTvl: { type: "number", description: "Minimum TVL in USD (default 100000)" },
+        minApy: { type: "number", description: "Minimum total APY %" },
+        limit: { type: "number", description: "Max pools returned (1-100, default 20)" },
+      },
+    },
+  },
+  {
+    name: "verifystack_decode_tx",
+    description:
+      "Paid x402 API ($0.005 USDC on Base): EVM calldata & live transaction decoder via OpenChain + EVM RPC; flags unlimited ERC-20/NFT approvals before signing.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        data: { type: "string", description: "Raw 0x hex calldata to decode" },
+        to: { type: "string", description: "Optional target contract address" },
+        valueWei: { type: "string", description: "Optional native value in wei" },
+        txHash: { type: "string", description: "Optional live 0x tx hash to fetch and decode" },
+        chain: {
+          type: "string",
+          enum: ["base", "ethereum", "arbitrum", "optimism", "polygon"],
+        },
+      },
+    },
+  },
+  {
+    name: "verifystack_domain_intel",
+    description:
+      "Paid x402 API ($0.004 USDC on Base): Domain anti-phishing & trust profiler via Cloudflare DoH (A/MX/SPF/DMARC), RDAP registration age, and HTTPS security headers.",
+    inputSchema: {
+      type: "object",
+      required: ["domainOrUrl"],
+      properties: {
+        domainOrUrl: {
+          type: "string",
+          description: "Public domain or URL to inspect (e.g. https://app.uniswap.org)",
+        },
+      },
+    },
+  },
+  {
     name: "verifystack_clean_url",
     description:
       "Paid x402 API ($0.005 USDC on Base): Fetches any public URL, strips ads/scripts/navigation boilerplate, and returns clean LLM-ready Markdown, metadata, and token-count estimation.",
@@ -235,9 +295,27 @@ function buildRequestSpec(toolName, args = {}, baseUrl = DEFAULT_BASE_URL) {
       init: { method: "GET" },
     };
   }
+  if (toolName === "verifystack_defi_yields") {
+    const params = new URLSearchParams();
+    if (args.chain) params.set("chain", String(args.chain));
+    if (args.symbol) params.set("symbol", String(args.symbol));
+    if (args.project) params.set("project", String(args.project));
+    if (args.stablecoin !== undefined) params.set("stablecoin", String(args.stablecoin));
+    if (args.singleAsset !== undefined) params.set("singleAsset", String(args.singleAsset));
+    if (args.minTvl !== undefined) params.set("minTvl", String(args.minTvl));
+    if (args.minApy !== undefined) params.set("minApy", String(args.minApy));
+    if (args.limit !== undefined) params.set("limit", String(args.limit));
+    const qs = params.toString();
+    return {
+      url: `${baseUrl}/api/defi-yields${qs ? `?${qs}` : ""}`,
+      init: { method: "GET" },
+    };
+  }
 
   const postRoutes = {
     verifystack_clean_url: "/api/clean-url",
+    verifystack_decode_tx: "/api/decode-tx",
+    verifystack_domain_intel: "/api/domain-intel",
     verifystack_wallet_profile: "/api/wallet-profile",
     verifystack_token_safety: "/api/token-safety",
     verifystack_verify_signature: "/api/verify-signature",
@@ -340,7 +418,7 @@ export async function handleRpcMessage(msg, deps = {}) {
       result: {
         protocolVersion: "2024-11-05",
         capabilities: { tools: {} },
-        serverInfo: { name: "verifystack-x402-mcp", version: "0.1.2" },
+        serverInfo: { name: "verifystack-x402-mcp", version: "0.2.0" },
       },
     };
   }

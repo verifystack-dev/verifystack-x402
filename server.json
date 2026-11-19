@@ -1,0 +1,30 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.verifystack-dev/verifystack-x402",
+  "description": "11 pay-per-request DeFi yields, prediction market, calldata, web & wallet tools via x402 Base USDC.",
+  "version": "0.2.0",
+  "repository": {
+    "url": "https://github.com/verifystack-dev/verifystack-x402",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "verifystack-x402-mcp",
+      "version": "0.2.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "X402_BUYER_KEY",
+          "description": "Base Mainnet buyer private key (0x...) used to sign automatic x402 USDC micropayments.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}

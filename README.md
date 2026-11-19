@@ -19,6 +19,9 @@ No API keys. No subscriptions. Agents pay per request using standard `PAYMENT-RE
 | :--- | :--- | :--- | :--- |
 | `GET` | `/api/live-funding-arb` | **$0.01** | Live cross-exchange perp funding arbitrage across **Hyperliquid, dYdX v4, and Gate.io** normalized to hourly spreads & gross APR (20s cache). Query: `?symbol=BTC&limit=15&minApr=10` |
 | `GET` | `/api/prediction-markets` | **$0.008** | Live prediction market scanner & cross-venue arbitrage finder across **Polymarket, Kalshi, and Manifold Markets** (30s cache). Query: `?q=bitcoin&platform=all&minLiquidity=1000&limit=20` |
+| `GET` | `/api/defi-yields` | **$0.005** | Live DeFi yield & stablecoin APY scanner powered by **DefiLlama**: filters by chain/symbol/TVL & scores organic Base APY vs reward emissions (60s cache). |
+| `POST` | `/api/decode-tx` | **$0.005** | EVM transaction decoder & calldata firewall resolving selectors via **OpenChain + EVM RPC** and flagging unlimited ERC-20/NFT approvals. |
+| `POST` | `/api/domain-intel` | **$0.004** | Domain anti-phishing & trust profiler using **Cloudflare DoH** (`A/MX/SPF/DMARC`), **RDAP** domain age, and HTTPS security headers (60s cache). |
 | `POST` | `/api/clean-url` | **$0.005** | Web-to-LLM Markdown & metadata extractor: strips ads, scripts, and navigation boilerplate, returning compact Markdown + token estimate (60s cache). |
 | `POST` | `/api/wallet-profile` | **$0.008** | Multichain EVM wallet counterparty & gas profiler across **Base, Ethereum, Arbitrum, Optimism, and Polygon** (native/USDC balances, EOA vs contract, nonce activity, live gas fees; 20s cache). |
 | `POST` | `/api/token-safety` | **$0.008** | Pre-trade token security & liquidity risk audit combining **GoPlus Security**, **Honeypot.is**, and **DexScreener** (`base`, `ethereum`, `arbitrum`, `bsc`, `polygon`, `solana`). |
