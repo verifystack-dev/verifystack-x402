@@ -1,7 +1,7 @@
 {
   "name": "verifystack-x402-mcp",
   "mcpName": "io.github.verifystack-dev/verifystack-x402",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "MCP server and x402 client for VerifyStack DeFi Yields, Tx Decoder, Prediction Markets, Domain Intel, Web-to-Markdown & Wallet Oracle (Base USDC)",
   "type": "module",
   "bin": {

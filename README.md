@@ -22,6 +22,7 @@ No API keys. No subscriptions. Agents pay per request using standard `PAYMENT-RE
 | `GET` | `/api/defi-yields` | **$0.005** | Live DeFi yield & stablecoin APY scanner powered by **DefiLlama**: filters by chain/symbol/TVL & scores organic Base APY vs reward emissions (60s cache). |
 | `POST` | `/api/decode-tx` | **$0.005** | EVM transaction decoder & calldata firewall resolving selectors via **OpenChain + EVM RPC** and flagging unlimited ERC-20/NFT approvals. |
 | `POST` | `/api/domain-intel` | **$0.004** | Domain anti-phishing & trust profiler using **Cloudflare DoH** (`A/MX/SPF/DMARC`), **RDAP** domain age, and HTTPS security headers (60s cache). |
+| `GET` | `/api/web-research` | **$0.004** | Universal tech, news & academic search across **HackerNews, GitHub, arXiv, and Wikipedia** with zero API keys (60s cache). Query: `?q=x402&sources=all&limit=5` |
 | `POST` | `/api/clean-url` | **$0.005** | Web-to-LLM Markdown & metadata extractor: strips ads, scripts, and navigation boilerplate, returning compact Markdown + token estimate (60s cache). |
 | `POST` | `/api/wallet-profile` | **$0.008** | Multichain EVM wallet counterparty & gas profiler across **Base, Ethereum, Arbitrum, Optimism, and Polygon** (native/USDC balances, EOA vs contract, nonce activity, live gas fees; 20s cache). |
 | `POST` | `/api/token-safety` | **$0.008** | Pre-trade token security & liquidity risk audit combining **GoPlus Security**, **Honeypot.is**, and **DexScreener** (`base`, `ethereum`, `arbitrum`, `bsc`, `polygon`, `solana`). |
@@ -111,12 +112,19 @@ npm install
 
 ---
 
-## Quickstart Script (Node.js)
+## Code Examples (Python, Node.js, Trading & Agent Bots)
 
-See [examples/quickstart.mjs](./examples/quickstart.mjs):
+See [examples/README.md](./examples/README.md) for all ready-to-run templates:
+
+- **Python (`x402[httpx,evm]`):** [examples/python-x402-quickstart.py](./examples/python-x402-quickstart.py)
+- **Autonomous AI Agent Workflow (5 tools):** [examples/agent-workflow.mjs](./examples/agent-workflow.mjs)
+- **4-Layer Pre-Trade Security Gatekeeper:** [examples/pretrade-safety-gate.mjs](./examples/pretrade-safety-gate.mjs)
+- **Automated Yield & Arb Monitor Loop:** [examples/arb-monitor-loop.mjs](./examples/arb-monitor-loop.mjs)
+- **MCP Client Configs (Claude, Cursor, Windsurf):** [examples/mcp-configs.json](./examples/mcp-configs.json)
+- **Minimal Node.js Quickstart:** [examples/quickstart.mjs](./examples/quickstart.mjs)
 
 ```bash
-X402_BUYER_KEY="0xYOUR_BASE_BUYER_PRIVATE_KEY" node examples/quickstart.mjs
+X402_BUYER_KEY="0xYOUR_BASE_BUYER_PRIVATE_KEY" node examples/agent-workflow.mjs
 ```
 
 Inspect payment requirements directly with `curl`:

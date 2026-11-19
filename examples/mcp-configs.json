@@ -1,0 +1,25 @@
+{
+  "claude_desktop_and_cursor": {
+    "mcpServers": {
+      "verifystack-x402": {
+        "command": "npx",
+        "args": ["-y", "verifystack-x402-mcp"],
+        "env": {
+          "X402_BUYER_KEY": "0xYOUR_BASE_BUYER_PRIVATE_KEY"
+        }
+      }
+    }
+  },
+  "custom_endpoint_override_example": {
+    "mcpServers": {
+      "verifystack-x402": {
+        "command": "npx",
+        "args": ["-y", "verifystack-x402-mcp"],
+        "env": {
+          "X402_BUYER_KEY": "0xYOUR_BASE_BUYER_PRIVATE_KEY",
+          "VERIFYSTACK_URL": "https://x402-crypto-math-api.verifystack.workers.dev"
+        }
+      }
+    }
+  }
+}

@@ -114,6 +114,26 @@ export const TOOLS = [
     },
   },
   {
+    name: "verifystack_web_research",
+    description:
+      "Paid x402 API ($0.004 USDC on Base): Universal multi-source research & news search across HackerNews, GitHub Repositories, arXiv papers, and Wikipedia with zero API keys (60s cache).",
+    inputSchema: {
+      type: "object",
+      required: ["q"],
+      properties: {
+        q: { type: "string", description: "Search query (2-200 characters)" },
+        sources: {
+          type: "string",
+          description: "Comma-separated: hackernews, github, arxiv, wikipedia, or all",
+        },
+        limit: {
+          type: "number",
+          description: "Max items per source (1-15, default 5)",
+        },
+      },
+    },
+  },
+  {
     name: "verifystack_clean_url",
     description:
       "Paid x402 API ($0.005 USDC on Base): Fetches any public URL, strips ads/scripts/navigation boilerplate, and returns clean LLM-ready Markdown, metadata, and token-count estimation.",
@@ -311,6 +331,17 @@ function buildRequestSpec(toolName, args = {}, baseUrl = DEFAULT_BASE_URL) {
       init: { method: "GET" },
     };
   }
+  if (toolName === "verifystack_web_research") {
+    const params = new URLSearchParams();
+    if (args.q) params.set("q", String(args.q));
+    if (args.sources) params.set("sources", String(args.sources));
+    if (args.limit !== undefined) params.set("limit", String(args.limit));
+    const qs = params.toString();
+    return {
+      url: `${baseUrl}/api/web-research${qs ? `?${qs}` : ""}`,
+      init: { method: "GET" },
+    };
+  }
 
   const postRoutes = {
     verifystack_clean_url: "/api/clean-url",
@@ -418,7 +449,7 @@ export async function handleRpcMessage(msg, deps = {}) {
       result: {
         protocolVersion: "2024-11-05",
         capabilities: { tools: {} },
-        serverInfo: { name: "verifystack-x402-mcp", version: "0.2.0" },
+        serverInfo: { name: "verifystack-x402-mcp", version: "0.3.0" },
       },
     };
   }
