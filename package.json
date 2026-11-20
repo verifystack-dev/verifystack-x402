@@ -1,7 +1,7 @@
 {
   "name": "verifystack-x402-mcp",
   "mcpName": "io.github.verifystack-dev/verifystack-x402",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "MCP server and x402 client for 15 pay-per-request VerifyStack crypto, DeFi, contract audit, DEX flow & web research tools (Base USDC)",
   "type": "module",
   "bin": {

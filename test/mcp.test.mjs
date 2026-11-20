@@ -22,6 +22,18 @@ describe("VerifyStack x402 MCP Server", () => {
       listRes.result.tools.map((t) => t.name),
       TOOLS.map((t) => t.name)
     );
+    for (const tool of listRes.result.tools) {
+      assert.ok(tool.title && tool.title.length > 0, `${tool.name} missing title`);
+      assert.equal(tool.annotations?.readOnlyHint, true, `${tool.name} missing readOnlyHint`);
+      assert.equal(tool.annotations?.destructiveHint, false, `${tool.name} missing destructiveHint`);
+      assert.equal(tool.inputSchema?.additionalProperties, false, `${tool.name} missing additionalProperties: false`);
+      for (const [propName, propSchema] of Object.entries(tool.inputSchema?.properties ?? {})) {
+        assert.ok(
+          propSchema.description && propSchema.description.length > 0,
+          `${tool.name}.${propName} missing description`
+        );
+      }
+    }
   });
 
   it("returns decoded 402 quote when X402_BUYER_KEY is omitted", async () => {

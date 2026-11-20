@@ -4,13 +4,30 @@ import { pathToFileURL } from "node:url";
 
 const DEFAULT_BASE_URL = "https://x402-crypto-math-api.verifystack.workers.dev";
 
+const READ_NETWORK_ANNOTATIONS = {
+  readOnlyHint: true,
+  destructiveHint: false,
+  idempotentHint: true,
+  openWorldHint: true,
+};
+
+const PURE_COMPUTE_ANNOTATIONS = {
+  readOnlyHint: true,
+  destructiveHint: false,
+  idempotentHint: true,
+  openWorldHint: false,
+};
+
 export const TOOLS = [
   {
     name: "verifystack_live_funding_arb",
+    title: "Live Cross-Exchange Funding Rate Arbitrage Scanner",
+    annotations: READ_NETWORK_ANNOTATIONS,
     description:
       "Paid x402 API ($0.01 USDC on Base): Real-time cross-exchange perpetual funding rate arbitrage scanner aggregating Hyperliquid, dYdX v4, and Gate.io normalized to hourly spreads and gross APR.",
     inputSchema: {
       type: "object",
+      additionalProperties: false,
       properties: {
         symbol: {
           type: "string",
@@ -29,10 +46,13 @@ export const TOOLS = [
   },
   {
     name: "verifystack_prediction_markets",
+    title: "Live Multi-Venue Prediction Market Scanner",
+    annotations: READ_NETWORK_ANNOTATIONS,
     description:
       "Paid x402 API ($0.008 USDC on Base): Live prediction market scanner aggregating Polymarket, Kalshi, and Manifold Markets with normalized YES/NO probabilities, spreads, and cross-venue arbitrage divergences.",
     inputSchema: {
       type: "object",
+      additionalProperties: false,
       properties: {
         q: {
           type: "string",
@@ -55,10 +75,13 @@ export const TOOLS = [
   },
   {
     name: "verifystack_defi_yields",
+    title: "Live DeFi Yield & Stablecoin APY Scanner",
+    annotations: READ_NETWORK_ANNOTATIONS,
     description:
       "Paid x402 API ($0.005 USDC on Base): Live DeFi yield & stablecoin APY scanner powered by DefiLlama; filters by chain, symbol, TVL, and separates organic Base APY from reward emissions.",
     inputSchema: {
       type: "object",
+      additionalProperties: false,
       properties: {
         chain: {
           type: "string",
@@ -82,10 +105,13 @@ export const TOOLS = [
   },
   {
     name: "verifystack_decode_tx",
+    title: "EVM Transaction Decoder & Calldata Firewall",
+    annotations: READ_NETWORK_ANNOTATIONS,
     description:
       "Paid x402 API ($0.005 USDC on Base): EVM calldata & live transaction decoder via OpenChain + EVM RPC; flags unlimited ERC-20/NFT approvals before signing.",
     inputSchema: {
       type: "object",
+      additionalProperties: false,
       properties: {
         data: { type: "string", description: "Raw 0x hex calldata to decode" },
         to: { type: "string", description: "Optional target contract address" },
@@ -94,16 +120,20 @@ export const TOOLS = [
         chain: {
           type: "string",
           enum: ["base", "ethereum", "arbitrum", "optimism", "polygon"],
+          description: "Target EVM chain used when fetching live txHash (default: base)",
         },
       },
     },
   },
   {
     name: "verifystack_domain_intel",
+    title: "Domain Anti-Phishing & Trust Profiler",
+    annotations: READ_NETWORK_ANNOTATIONS,
     description:
       "Paid x402 API ($0.004 USDC on Base): Domain anti-phishing & trust profiler via Cloudflare DoH (A/MX/SPF/DMARC), RDAP registration age, and HTTPS security headers.",
     inputSchema: {
       type: "object",
+      additionalProperties: false,
       required: ["domainOrUrl"],
       properties: {
         domainOrUrl: {
@@ -115,10 +145,13 @@ export const TOOLS = [
   },
   {
     name: "verifystack_web_research",
+    title: "Universal Multi-Source Web & Academic Search",
+    annotations: READ_NETWORK_ANNOTATIONS,
     description:
       "Paid x402 API ($0.004 USDC on Base): Universal multi-source research & news search across HackerNews, GitHub Repositories, arXiv papers, and Wikipedia with zero API keys (60s cache).",
     inputSchema: {
       type: "object",
+      additionalProperties: false,
       required: ["q"],
       properties: {
         q: { type: "string", description: "Search query (2-200 characters)" },
@@ -135,10 +168,13 @@ export const TOOLS = [
   },
   {
     name: "verifystack_clean_url",
+    title: "Web-to-Markdown Cleaner & Token Estimator",
+    annotations: READ_NETWORK_ANNOTATIONS,
     description:
       "Paid x402 API ($0.005 USDC on Base): Fetches any public URL, strips ads/scripts/navigation boilerplate, and returns clean LLM-ready Markdown, metadata, and token-count estimation.",
     inputSchema: {
       type: "object",
+      additionalProperties: false,
       required: ["url"],
       properties: {
         url: {
@@ -158,10 +194,13 @@ export const TOOLS = [
   },
   {
     name: "verifystack_wallet_profile",
+    title: "Multichain EVM Wallet & Gas Profiler",
+    annotations: READ_NETWORK_ANNOTATIONS,
     description:
       "Paid x402 API ($0.008 USDC on Base): Multichain EVM wallet counterparty & gas profiler across Base, Ethereum, Arbitrum, Optimism, and Polygon (native/USDC balances, EOA vs contract check, nonce activity, live gas fees).",
     inputSchema: {
       type: "object",
+      additionalProperties: false,
       required: ["address"],
       properties: {
         address: {
@@ -181,15 +220,19 @@ export const TOOLS = [
   },
   {
     name: "verifystack_token_safety",
+    title: "Pre-Trade Token Security & Liquidity Audit",
+    annotations: READ_NETWORK_ANNOTATIONS,
     description:
       "Paid x402 API ($0.008 USDC on Base): Pre-trade token security and DEX liquidity risk audit aggregating GoPlus Security, Honeypot.is simulation, and DexScreener liquidity.",
     inputSchema: {
       type: "object",
+      additionalProperties: false,
       required: ["chain", "address"],
       properties: {
         chain: {
           type: "string",
           enum: ["base", "ethereum", "arbitrum", "bsc", "polygon", "solana"],
+          description: "Blockchain network hosting the token contract",
         },
         address: {
           type: "string",
@@ -200,35 +243,62 @@ export const TOOLS = [
   },
   {
     name: "verifystack_verify_signature",
+    title: "Cryptographic Signature & Smart Wallet Verifier",
+    annotations: READ_NETWORK_ANNOTATIONS,
     description:
       "Paid x402 API ($0.005 USDC on Base): Deterministic cryptographic signature verifier for EVM EIP-191 personal_sign, EIP-712 typed data, ERC-1271 on-chain smart wallets, and Ed25519 (Solana).",
     inputSchema: {
       type: "object",
+      additionalProperties: false,
       required: ["scheme", "signature"],
       properties: {
         scheme: {
           type: "string",
           enum: ["evm_personal", "evm_eip712", "evm_erc1271", "ed25519"],
+          description: "Signature verification scheme to evaluate",
         },
         chain: {
           type: "string",
           enum: ["base", "ethereum", "arbitrum", "optimism", "polygon"],
+          description: "Target EVM chain for live on-chain ERC-1271 smart wallet verification",
         },
-        message: { type: "string" },
-        messageEncoding: { type: "string", enum: ["utf8", "hex", "base64"] },
-        signature: { type: "string" },
-        expectedAddress: { type: "string" },
-        publicKey: { type: "string" },
-        typedData: { type: "object" },
+        message: {
+          type: "string",
+          description: "Signed plaintext, hex, or base64 payload (required for personal_sign, ERC-1271, Ed25519)",
+        },
+        messageEncoding: {
+          type: "string",
+          enum: ["utf8", "hex", "base64"],
+          description: "Input encoding of message (default: utf8)",
+        },
+        signature: {
+          type: "string",
+          description: "Cryptographic signature bytes (0x hex for EVM; Base58/hex/base64 for Ed25519)",
+        },
+        expectedAddress: {
+          type: "string",
+          description: "Expected 0x EVM signer or smart-wallet address to match against",
+        },
+        publicKey: {
+          type: "string",
+          description: "Ed25519 public key (Solana Base58 or hex) required for ed25519 scheme",
+        },
+        typedData: {
+          type: "object",
+          description: "EIP-712 structured object containing domain, types, primaryType, and message",
+        },
       },
     },
   },
   {
     name: "verifystack_arb_net_profit",
+    title: "Arbitrage Net Profit & Break-Even Calculator",
+    annotations: PURE_COMPUTE_ANNOTATIONS,
     description:
       "Paid x402 API ($0.005 USDC on Base): Exact arbitrage net profit, break-even spread, and APR calculator accounting for maker/taker fees, slippage, transfer gas, and funding.",
     inputSchema: {
       type: "object",
+      additionalProperties: false,
       required: [
         "notionalUsd",
         "buyPrice",
@@ -237,43 +307,49 @@ export const TOOLS = [
         "sellFeeBps",
       ],
       properties: {
-        notionalUsd: { type: "number" },
-        buyPrice: { type: "number" },
-        sellPrice: { type: "number" },
-        buyFeeBps: { type: "number" },
-        sellFeeBps: { type: "number" },
-        slippageBps: { type: "number" },
-        gasAndTransferUsd: { type: "number" },
-        fundingRate8hBps: { type: "number" },
-        holdHours: { type: "number" },
+        notionalUsd: { type: "number", description: "Trade position notional size in USD" },
+        buyPrice: { type: "number", description: "Execution buy price on long venue" },
+        sellPrice: { type: "number", description: "Execution sell price on short venue" },
+        buyFeeBps: { type: "number", description: "Buy-side taker/maker fee in basis points" },
+        sellFeeBps: { type: "number", description: "Sell-side taker/maker fee in basis points" },
+        slippageBps: { type: "number", description: "Estimated combined slippage in basis points (default 0)" },
+        gasAndTransferUsd: { type: "number", description: "Fixed on-chain gas or bridge transfer cost in USD (default 0)" },
+        fundingRate8hBps: { type: "number", description: "Expected net 8-hour funding rate advantage in bps" },
+        holdHours: { type: "number", description: "Planned holding duration in hours for APR & funding accrual" },
       },
     },
   },
   {
     name: "verifystack_liquidation_sim",
+    title: "Perpetual Liquidation & Half-Kelly Risk Simulator",
+    annotations: PURE_COMPUTE_ANNOTATIONS,
     description:
       "Paid x402 API ($0.005 USDC on Base): Isolated-margin perpetual liquidation threshold, distance-to-liquidation %, risk-reward ratio, and conservative half-Kelly sizing simulator.",
     inputSchema: {
       type: "object",
+      additionalProperties: false,
       required: ["side", "entryPrice", "leverage", "collateralUsd"],
       properties: {
-        side: { type: "string", enum: ["long", "short"] },
-        entryPrice: { type: "number" },
-        leverage: { type: "number" },
-        collateralUsd: { type: "number" },
-        maintenanceMarginRate: { type: "number" },
-        targetPrice: { type: "number" },
-        stopLossPrice: { type: "number" },
-        winProbability: { type: "number" },
+        side: { type: "string", enum: ["long", "short"], description: "Position direction (long or short)" },
+        entryPrice: { type: "number", description: "Position entry price in USD" },
+        leverage: { type: "number", description: "Position leverage multiplier (e.g. 5, 10, 20)" },
+        collateralUsd: { type: "number", description: "Isolated initial margin collateral in USD" },
+        maintenanceMarginRate: { type: "number", description: "Exchange maintenance margin ratio (e.g. 0.005 for 0.5%)" },
+        targetPrice: { type: "number", description: "Optional take-profit target price for R:R calculation" },
+        stopLossPrice: { type: "number", description: "Optional stop-loss price for R:R calculation" },
+        winProbability: { type: "number", description: "Estimated trade win probability (0 to 1) for half-Kelly sizing" },
       },
     },
   },
   {
     name: "verifystack_contract_intel",
+    title: "Smart Contract Firewall & EIP-1967 Proxy Inspector",
+    annotations: READ_NETWORK_ANNOTATIONS,
     description:
       "Paid x402 API ($0.008 USDC on Base): Smart contract firewall & EIP-1967 proxy inspector via EVM RPC, Blockscout verification/ABI, and Sourcify across Base, Ethereum, Arbitrum, Optimism, and Polygon.",
     inputSchema: {
       type: "object",
+      additionalProperties: false,
       required: ["address"],
       properties: {
         address: {
@@ -290,10 +366,13 @@ export const TOOLS = [
   },
   {
     name: "verifystack_spot_perp_basis",
+    title: "Spot vs Perpetual Cash-and-Carry Basis Scanner",
+    annotations: READ_NETWORK_ANNOTATIONS,
     description:
       "Paid x402 API ($0.008 USDC on Base): Live cross-exchange cash-and-carry Spot vs Perpetual basis, executable BBO spread, and combined 30d carry APR scanner across Gate.io, OKX, and Hyperliquid.",
     inputSchema: {
       type: "object",
+      additionalProperties: false,
       properties: {
         symbol: {
           type: "string",
@@ -316,10 +395,13 @@ export const TOOLS = [
   },
   {
     name: "verifystack_dex_market_intel",
+    title: "Multi-Chain DEX Liquidity & Order-Flow Oracle",
+    annotations: READ_NETWORK_ANNOTATIONS,
     description:
       "Paid x402 API ($0.006 USDC on Base): Multi-chain DEX liquidity, 24h volume, price changes, and buy/sell order-flow oracle powered by DexScreener and GeckoTerminal.",
     inputSchema: {
       type: "object",
+      additionalProperties: false,
       properties: {
         q: {
           type: "string",
@@ -551,7 +633,7 @@ export async function handleRpcMessage(msg, deps = {}) {
       result: {
         protocolVersion: "2024-11-05",
         capabilities: { tools: {} },
-        serverInfo: { name: "verifystack-x402-mcp", version: "0.4.0" },
+        serverInfo: { name: "verifystack-x402-mcp", version: "0.4.1" },
       },
     };
   }
