@@ -29,6 +29,9 @@ No API keys. No subscriptions. Agents pay per request using standard `PAYMENT-RE
 | `POST` | `/api/verify-signature` | **$0.005** | Deterministic signature verifier for `evm_personal` (EIP-191), `evm_eip712`, `evm_erc1271` (live on-chain Smart Wallet RPC), and `ed25519` (Solana Base58/Hex/Base64). |
 | `POST` | `/api/arb-net-profit` | **$0.005** | Exact arbitrage net profit, break-even spread, and APR after fees, slippage, transfer gas, and funding. |
 | `POST` | `/api/liquidation-sim` | **$0.005** | Isolated-margin liquidation price, distance-to-liquidation %, risk/reward, and half-Kelly collateral sizing. |
+| `POST` | `/api/contract-intel` | **$0.008** | Smart contract firewall & EIP-1967 proxy inspector via **EVM RPC, Blockscout ABI verification, and Sourcify** (`base`, `ethereum`, `arbitrum`, `optimism`, `polygon`). |
+| `GET` | `/api/spot-perp-basis` | **$0.008** | Live cross-exchange cash-and-carry **Spot vs Perpetual** basis, executable BBO spread & combined 30d carry APR across **Gate.io, OKX, and Hyperliquid**. |
+| `GET` | `/api/dex-market-intel` | **$0.006** | Live multi-chain DEX liquidity, 24h volume, price changes & buy/sell order-flow oracle via **DexScreener and GeckoTerminal**. |
 
 ---
 

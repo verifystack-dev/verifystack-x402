@@ -268,6 +268,82 @@ export const TOOLS = [
       },
     },
   },
+  {
+    name: "verifystack_contract_intel",
+    description:
+      "Paid x402 API ($0.008 USDC on Base): Smart contract firewall & EIP-1967 proxy inspector via EVM RPC, Blockscout verification/ABI, and Sourcify across Base, Ethereum, Arbitrum, Optimism, and Polygon.",
+    inputSchema: {
+      type: "object",
+      required: ["address"],
+      properties: {
+        address: {
+          type: "string",
+          description: "0x EVM smart contract address to inspect",
+        },
+        chain: {
+          type: "string",
+          enum: ["base", "ethereum", "arbitrum", "optimism", "polygon"],
+          description: "Target EVM chain (default: base)",
+        },
+      },
+    },
+  },
+  {
+    name: "verifystack_spot_perp_basis",
+    description:
+      "Paid x402 API ($0.008 USDC on Base): Live cross-exchange cash-and-carry Spot vs Perpetual basis, executable BBO spread, and combined 30d carry APR scanner across Gate.io, OKX, and Hyperliquid.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        symbol: {
+          type: "string",
+          description: "Optional asset ticker filter (e.g. BTC, ETH, SOL)",
+        },
+        minBasisBps: {
+          type: "number",
+          description: "Minimum absolute executable basis spread in bps (0-5000)",
+        },
+        notionalUsd: {
+          type: "number",
+          description: "Optional position size in USD to estimate 30d carry return",
+        },
+        limit: {
+          type: "number",
+          description: "Max opportunities returned (1-100, default 15)",
+        },
+      },
+    },
+  },
+  {
+    name: "verifystack_dex_market_intel",
+    description:
+      "Paid x402 API ($0.006 USDC on Base): Multi-chain DEX liquidity, 24h volume, price changes, and buy/sell order-flow oracle powered by DexScreener and GeckoTerminal.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        q: {
+          type: "string",
+          description: "Token symbol or name query (e.g. AERO, VIRTUAL, PEPE)",
+        },
+        address: {
+          type: "string",
+          description: "Optional token contract/mint address",
+        },
+        chain: {
+          type: "string",
+          description: "Optional chain filter (base, ethereum, solana, arbitrum, bsc, polygon)",
+        },
+        minLiquidityUsd: {
+          type: "number",
+          description: "Minimum pool liquidity in USD (default 5000)",
+        },
+        limit: {
+          type: "number",
+          description: "Max pools returned (1-30, default 10)",
+        },
+      },
+    },
+  },
 ];
 
 let cachedHttpClientPromise = null;
@@ -342,9 +418,35 @@ function buildRequestSpec(toolName, args = {}, baseUrl = DEFAULT_BASE_URL) {
       init: { method: "GET" },
     };
   }
+  if (toolName === "verifystack_spot_perp_basis") {
+    const params = new URLSearchParams();
+    if (args.symbol) params.set("symbol", String(args.symbol));
+    if (args.minBasisBps !== undefined) params.set("minBasisBps", String(args.minBasisBps));
+    if (args.notionalUsd !== undefined) params.set("notionalUsd", String(args.notionalUsd));
+    if (args.limit !== undefined) params.set("limit", String(args.limit));
+    const qs = params.toString();
+    return {
+      url: `${baseUrl}/api/spot-perp-basis${qs ? `?${qs}` : ""}`,
+      init: { method: "GET" },
+    };
+  }
+  if (toolName === "verifystack_dex_market_intel") {
+    const params = new URLSearchParams();
+    if (args.q) params.set("q", String(args.q));
+    if (args.address) params.set("address", String(args.address));
+    if (args.chain) params.set("chain", String(args.chain));
+    if (args.minLiquidityUsd !== undefined) params.set("minLiquidityUsd", String(args.minLiquidityUsd));
+    if (args.limit !== undefined) params.set("limit", String(args.limit));
+    const qs = params.toString();
+    return {
+      url: `${baseUrl}/api/dex-market-intel${qs ? `?${qs}` : ""}`,
+      init: { method: "GET" },
+    };
+  }
 
   const postRoutes = {
     verifystack_clean_url: "/api/clean-url",
+    verifystack_contract_intel: "/api/contract-intel",
     verifystack_decode_tx: "/api/decode-tx",
     verifystack_domain_intel: "/api/domain-intel",
     verifystack_wallet_profile: "/api/wallet-profile",
@@ -449,7 +551,7 @@ export async function handleRpcMessage(msg, deps = {}) {
       result: {
         protocolVersion: "2024-11-05",
         capabilities: { tools: {} },
-        serverInfo: { name: "verifystack-x402-mcp", version: "0.3.0" },
+        serverInfo: { name: "verifystack-x402-mcp", version: "0.4.0" },
       },
     };
   }
