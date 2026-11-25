@@ -1,8 +1,8 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.verifystack-dev/verifystack-x402",
-  "description": "15 pay-per-request DeFi yields, basis arb, DEX flow, contract audit & web research tools via x402.",
-  "version": "0.4.1",
+  "description": "16 pay-per-request DeFi yields, basis arb, DEX flow, contract audit, Chromium rendering & web research tools via x402.",
+  "version": "0.5.0",
   "repository": {
     "url": "https://github.com/verifystack-dev/verifystack-x402",
     "source": "github"
@@ -12,7 +12,7 @@
       "registryType": "npm",
       "registryBaseUrl": "https://registry.npmjs.org",
       "identifier": "verifystack-x402-mcp",
-      "version": "0.4.1",
+      "version": "0.5.0",
       "transport": {
         "type": "stdio"
       },

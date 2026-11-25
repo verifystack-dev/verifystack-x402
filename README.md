@@ -32,6 +32,7 @@ No API keys. No subscriptions. Agents pay per request using standard `PAYMENT-RE
 | `POST` | `/api/contract-intel` | **$0.008** | Smart contract firewall & EIP-1967 proxy inspector via **EVM RPC, Blockscout ABI verification, and Sourcify** (`base`, `ethereum`, `arbitrum`, `optimism`, `polygon`). |
 | `GET` | `/api/spot-perp-basis` | **$0.008** | Live cross-exchange cash-and-carry **Spot vs Perpetual** basis, executable BBO spread & combined 30d carry APR across **Gate.io, OKX, and Hyperliquid**. |
 | `GET` | `/api/dex-market-intel` | **$0.006** | Live multi-chain DEX liquidity, 24h volume, price changes & buy/sell order-flow oracle via **DexScreener and GeckoTerminal**. |
+| `POST` | `/api/render-url` | **$0.02** | Headless **Playwright Chromium** JS/SPA renderer with SSRF firewall: returns full rendered Markdown, metadata, optional links, and optional JPEG/PNG screenshot. |
 
 ---
 

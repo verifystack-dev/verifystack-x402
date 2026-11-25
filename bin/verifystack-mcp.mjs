@@ -426,6 +426,60 @@ export const TOOLS = [
       },
     },
   },
+  {
+    name: "verifystack_render_url",
+    title: "Headless Chromium JS Web Renderer & Screenshotter",
+    annotations: READ_NETWORK_ANNOTATIONS,
+    description:
+      "Paid x402 API ($0.02 USDC on Base): Renders dynamic JavaScript/SPA/React web pages inside a real headless Chromium browser with SSRF protection, returning clean Markdown, metadata, optional links, and optional JPEG/PNG screenshot.",
+    inputSchema: {
+      type: "object",
+      additionalProperties: false,
+      required: ["url"],
+      properties: {
+        url: {
+          type: "string",
+          description: "Public http:// or https:// URL to render in Chromium",
+        },
+        waitUntil: {
+          type: "string",
+          description: "Navigation readiness event: domcontentloaded, load, or networkidle (default networkidle)",
+        },
+        waitMs: {
+          type: "number",
+          description: "Extra settle delay in ms after load for SPA hydration (0-5000, default 500)",
+        },
+        waitForSelector: {
+          type: "string",
+          description: "Optional CSS selector to wait for before extracting content",
+        },
+        maxChars: {
+          type: "number",
+          description: "Maximum Markdown length returned (200-40000, default 12000)",
+        },
+        includeLinks: {
+          type: "boolean",
+          description: "Include extracted outbound links array (default false)",
+        },
+        includeScreenshot: {
+          type: "boolean",
+          description: "Capture base64 JPEG or PNG screenshot of rendered page (default false)",
+        },
+        screenshotFormat: {
+          type: "string",
+          description: "Screenshot encoding when includeScreenshot is true: jpeg or png (default jpeg)",
+        },
+        fullPage: {
+          type: "boolean",
+          description: "Capture full scrollable page screenshot instead of viewport (default false)",
+        },
+        blockMedia: {
+          type: "boolean",
+          description: "Block images/fonts/video for faster extraction (defaults true unless includeScreenshot is true)",
+        },
+      },
+    },
+  },
 ];
 
 let cachedHttpClientPromise = null;
@@ -528,6 +582,7 @@ function buildRequestSpec(toolName, args = {}, baseUrl = DEFAULT_BASE_URL) {
 
   const postRoutes = {
     verifystack_clean_url: "/api/clean-url",
+    verifystack_render_url: "/api/render-url",
     verifystack_contract_intel: "/api/contract-intel",
     verifystack_decode_tx: "/api/decode-tx",
     verifystack_domain_intel: "/api/domain-intel",
@@ -633,7 +688,7 @@ export async function handleRpcMessage(msg, deps = {}) {
       result: {
         protocolVersion: "2024-11-05",
         capabilities: { tools: {} },
-        serverInfo: { name: "verifystack-x402-mcp", version: "0.4.1" },
+        serverInfo: { name: "verifystack-x402-mcp", version: "0.5.0" },
       },
     };
   }
