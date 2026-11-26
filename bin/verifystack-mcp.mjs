@@ -749,7 +749,7 @@ export async function handleRpcMessage(msg, deps = {}) {
       result: {
         protocolVersion: "2024-11-05",
         capabilities: { tools: {} },
-        serverInfo: { name: "verifystack-x402-mcp", version: "0.6.0" },
+        serverInfo: { name: "verifystack-x402-mcp", version: "0.6.1" },
       },
     };
   }

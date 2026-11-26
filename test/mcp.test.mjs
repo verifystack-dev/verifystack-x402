@@ -11,7 +11,7 @@ describe("VerifyStack x402 MCP Server", () => {
       params: {},
     });
     assert.equal(initRes.result.serverInfo.name, "verifystack-x402-mcp");
-    assert.equal(initRes.result.serverInfo.version, "0.6.0");
+    assert.equal(initRes.result.serverInfo.version, "0.6.1");
 
     const listRes = await handleRpcMessage({
       jsonrpc: "2.0",
