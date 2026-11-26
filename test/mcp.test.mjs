@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { handleRpcMessage, TOOLS } from "../bin/verifystack-mcp.mjs";
 
 describe("VerifyStack x402 MCP Server", () => {
-  it("handles initialize and lists all 16 x402 tools", async () => {
+  it("handles initialize and lists all 17 x402 tools", async () => {
     const initRes = await handleRpcMessage({
       jsonrpc: "2.0",
       id: 1,
@@ -11,13 +11,14 @@ describe("VerifyStack x402 MCP Server", () => {
       params: {},
     });
     assert.equal(initRes.result.serverInfo.name, "verifystack-x402-mcp");
+    assert.equal(initRes.result.serverInfo.version, "0.6.0");
 
     const listRes = await handleRpcMessage({
       jsonrpc: "2.0",
       id: 2,
       method: "tools/list",
     });
-    assert.equal(listRes.result.tools.length, 16);
+    assert.equal(listRes.result.tools.length, 17);
     assert.deepEqual(
       listRes.result.tools.map((t) => t.name),
       TOOLS.map((t) => t.name)
@@ -67,6 +68,36 @@ describe("VerifyStack x402 MCP Server", () => {
     assert.equal(callRes.result.isError, true);
     const body = JSON.parse(callRes.result.content[0].text);
     assert.equal(body.paymentRequired.accepts[0].network, "eip155:8453");
+  });
+
+  it("routes verifystack_alpha_history GET query parameters properly", async () => {
+    let capturedUrl = "";
+    const mockFetch = async (url) => {
+      capturedUrl = String(url);
+      return new Response(JSON.stringify({ recordsReturned: 1, records: [{ symbol: "BTC" }] }), {
+        status: 200,
+      });
+    };
+
+    const res = await handleRpcMessage(
+      {
+        jsonrpc: "2.0",
+        id: 5,
+        method: "tools/call",
+        params: {
+          name: "verifystack_alpha_history",
+          arguments: { feed: "funding", days: 3, symbol: "BTC", minApr: 50 },
+        },
+      },
+      { fetchFn: mockFetch }
+    );
+
+    assert.equal(res.result.isError, false);
+    assert.match(capturedUrl, /\/api\/alpha-history\?/);
+    assert.match(capturedUrl, /feed=funding/);
+    assert.match(capturedUrl, /days=3/);
+    assert.match(capturedUrl, /symbol=BTC/);
+    assert.match(capturedUrl, /minApr=50/);
   });
 
   it("handles unknown tool errors gracefully", async () => {

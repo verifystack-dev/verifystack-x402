@@ -480,6 +480,51 @@ export const TOOLS = [
       },
     },
   },
+  {
+    name: "verifystack_alpha_history",
+    title: "24/7 Historical Crypto Funding & Prediction Arbitrage Dataset",
+    annotations: READ_NETWORK_ANNOTATIONS,
+    description:
+      "Paid x402 API ($0.01 USDC on Base): Queries VerifyStack's continuous 24/7 Oracle archive across Hyperliquid, dYdX v4, Gate.io, OKX, Polymarket, Kalshi, and Manifold for historical funding spreads, spot-perp basis time-series, prediction divergences, and high-signal alerts.",
+    inputSchema: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        feed: {
+          type: "string",
+          description: "Archive feed to query: funding, predictions, alerts, or all (default funding)",
+        },
+        days: {
+          type: "number",
+          description: "UTC lookback days (1-90, default 7)",
+        },
+        snapshotLimit: {
+          type: "number",
+          description: "Number of recent collection cycles or alert rows to inspect (1-500, default 30)",
+        },
+        maxRows: {
+          type: "number",
+          description: "Maximum normalized time-series rows returned (1-1000, default 100)",
+        },
+        symbol: {
+          type: "string",
+          description: "Optional crypto ticker filter (e.g. BTC, ETH, SOL, HYPE)",
+        },
+        query: {
+          type: "string",
+          description: "Optional prediction market question keyword filter (e.g. Fed, Bitcoin)",
+        },
+        minApr: {
+          type: "number",
+          description: "Minimum annualized APR percentage filter",
+        },
+        minPredGapPct: {
+          type: "number",
+          description: "Minimum prediction probability gap percentage filter",
+        },
+      },
+    },
+  },
 ];
 
 let cachedHttpClientPromise = null;
@@ -576,6 +621,22 @@ function buildRequestSpec(toolName, args = {}, baseUrl = DEFAULT_BASE_URL) {
     const qs = params.toString();
     return {
       url: `${baseUrl}/api/dex-market-intel${qs ? `?${qs}` : ""}`,
+      init: { method: "GET" },
+    };
+  }
+  if (toolName === "verifystack_alpha_history") {
+    const params = new URLSearchParams();
+    if (args.feed) params.set("feed", String(args.feed));
+    if (args.days !== undefined) params.set("days", String(args.days));
+    if (args.snapshotLimit !== undefined) params.set("snapshotLimit", String(args.snapshotLimit));
+    if (args.maxRows !== undefined) params.set("maxRows", String(args.maxRows));
+    if (args.symbol) params.set("symbol", String(args.symbol));
+    if (args.query) params.set("query", String(args.query));
+    if (args.minApr !== undefined) params.set("minApr", String(args.minApr));
+    if (args.minPredGapPct !== undefined) params.set("minPredGapPct", String(args.minPredGapPct));
+    const qs = params.toString();
+    return {
+      url: `${baseUrl}/api/alpha-history${qs ? `?${qs}` : ""}`,
       init: { method: "GET" },
     };
   }
@@ -688,7 +749,7 @@ export async function handleRpcMessage(msg, deps = {}) {
       result: {
         protocolVersion: "2024-11-05",
         capabilities: { tools: {} },
-        serverInfo: { name: "verifystack-x402-mcp", version: "0.5.0" },
+        serverInfo: { name: "verifystack-x402-mcp", version: "0.6.0" },
       },
     };
   }

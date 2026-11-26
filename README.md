@@ -33,6 +33,7 @@ No API keys. No subscriptions. Agents pay per request using standard `PAYMENT-RE
 | `GET` | `/api/spot-perp-basis` | **$0.008** | Live cross-exchange cash-and-carry **Spot vs Perpetual** basis, executable BBO spread & combined 30d carry APR across **Gate.io, OKX, and Hyperliquid**. |
 | `GET` | `/api/dex-market-intel` | **$0.006** | Live multi-chain DEX liquidity, 24h volume, price changes & buy/sell order-flow oracle via **DexScreener and GeckoTerminal**. |
 | `POST` | `/api/render-url` | **$0.02** | Headless **Playwright Chromium** JS/SPA renderer with SSRF firewall: returns full rendered Markdown, metadata, optional links, and optional JPEG/PNG screenshot. |
+| `GET` | `/api/alpha-history` | **$0.01** | Continuous **24/7 historical time-series** & high-signal arbitrage alerts across Hyperliquid, dYdX v4, Gate.io, OKX, Polymarket, Kalshi, and Manifold (`?feed=funding&days=7&symbol=BTC`). |
 
 ---
 
